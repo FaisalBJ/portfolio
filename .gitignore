@@ -1,0 +1,8 @@
+# Raw/scratch source dump — not used by the live site
+images/final cut/
+
+# Unused raw Roblox screenshots
+images/RobloxScreenShot*.png
+
+# Editor project files
+*.pdn
