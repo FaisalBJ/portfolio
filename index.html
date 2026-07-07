@@ -853,10 +853,23 @@
   /* Scroll reveals */
   const io = new IntersectionObserver((entries)=>{
     for(const e of entries){
-      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+        /* mobile Safari/Chrome won't honor the autoplay attribute on an
+           element that was opacity:0 at parse time — force play once it's
+           actually visible */
+        const vid = e.target.querySelector('video');
+        if(vid) vid.play().catch(()=>{});
+      }
     }
   },{threshold:.08,rootMargin:'0px 0px -50px 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* Also nudge any video already in view on load (e.g. hero-adjacent clips) */
+  document.querySelectorAll('.reveal video').forEach(vid=>{
+    vid.addEventListener('loadedmetadata',()=>vid.play().catch(()=>{}),{once:true});
+  });
 
   /* Hero slideshow — Zara-style slow crossfade with Ken Burns */
   const slides=[...document.querySelectorAll('.slide')];
